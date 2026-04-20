@@ -14,7 +14,7 @@ public class DBConnection {
         + "&characterEncoding=UTF-8";
 
     private static final String USER = "root";
-    private static final String PASSWORD = "YOUR_PASSWORD"; // thay password trong ảnh
+    private static final String PASSWORD = "railway"; // thay password trong ảnh
 
     static {
         try {
