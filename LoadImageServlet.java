@@ -1,64 +1,80 @@
-package controller.admin;
+package controller.user;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import utils.FileUploadUtil;
 
-@WebServlet(name = "AdminLoadImageServlet", urlPatterns = {"/image"})
+@WebServlet("/load-image")
 public class LoadImageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
+
         String fileName = request.getParameter("name");
 
         if (fileName == null || fileName.trim().isEmpty()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Thiếu tên ảnh");
             return;
         }
 
         fileName = fileName.trim();
 
-        if (fileName.contains("..") || fileName.contains("/") || fileName.contains("\\")) {
+        if (!FileUploadUtil.isAllowedImageFileName(fileName)) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Tên ảnh không hợp lệ");
             return;
         }
 
-        File file = new File(FileUploadUtil.getUploadDir(), fileName);
+        Path uploadDir = Paths.get(FileUploadUtil.getUploadDir()).normalize().toAbsolutePath();
+        Path filePath = uploadDir.resolve(fileName).normalize();
 
-        if (!file.exists() || !file.isFile()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if (!filePath.startsWith(uploadDir)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Đường dẫn ảnh không hợp lệ");
             return;
         }
 
-        String lowerName = fileName.toLowerCase();
-        if (lowerName.endsWith(".png")) {
-            response.setContentType("image/png");
-        } else if (lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg") || lowerName.endsWith(".jfif")) {
-            response.setContentType("image/jpeg");
-        } else if (lowerName.endsWith(".gif")) {
-            response.setContentType("image/gif");
-        } else if (lowerName.endsWith(".webp")) {
-            response.setContentType("image/webp");
-        } else if (lowerName.endsWith(".bmp")) {
-            response.setContentType("image/bmp");
-        } else if (lowerName.endsWith(".heic")) {
-            response.setContentType("image/heic");
-        } else {
-            response.setContentType("application/octet-stream");
+        if (!Files.exists(filePath) || !Files.isRegularFile(filePath)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy ảnh");
+            return;
         }
 
-        response.setContentLengthLong(file.length());
+        String contentType = Files.probeContentType(filePath);
+        if (contentType == null) {
+            String lower = fileName.toLowerCase();
+            if (lower.endsWith(".png")) {
+                contentType = "image/png";
+            } else if (lower.endsWith(".webp")) {
+                contentType = "image/webp";
+            } else {
+                contentType = "image/jpeg";
+            }
+        }
 
-        try (FileInputStream in = new FileInputStream(file);
+        contentType = contentType.toLowerCase();
+        if (!contentType.equals("image/jpeg")
+                && !contentType.equals("image/png")
+                && !contentType.equals("image/webp")) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Định dạng ảnh không được hỗ trợ");
+            return;
+        }
+
+        response.setContentType(contentType);
+        response.setContentLengthLong(Files.size(filePath));
+        response.setHeader("X-Content-Type-Options", "nosniff");
+        response.setHeader("Cache-Control", "public, max-age=86400");
+
+        try (InputStream in = Files.newInputStream(filePath);
              OutputStream out = response.getOutputStream()) {
 
             byte[] buffer = new byte[8192];
@@ -69,6 +85,11 @@ public class LoadImageServlet extends HttpServlet {
             }
 
             out.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi đọc ảnh");
+            }
         }
     }
 }
