@@ -1,0 +1,229 @@
+/* ===== MODAL HÓA ĐƠN SẢN PHẨM ===== */
+
+.bill-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.bill-modal.show {
+    display: flex;
+}
+
+/* khung modal */
+.bill-modal-content {
+    position: relative;
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 14px;
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* ảnh trong modal */
+.bill-modal-content img {
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 10px;
+}
+
+/* nút đóng */
+.bill-close-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    border: none;
+    background: #dc3545;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.bill-close-btn:hover {
+    background: #bb2d3b;
+}
+
+/* ===== BOX HÓA ĐƠN TRONG SẢN PHẨM ===== */
+
+.product-invoice-box {
+    min-width: 260px;
+    padding: 12px;
+    border-left: 1px solid #eee;
+}
+
+.product-invoice-box p {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* ảnh preview nhỏ */
+.invoice-preview img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.invoice-preview img:hover {
+    transform: scale(1.05);
+}
+
+/* input file */
+.product-invoice-box input[type="file"] {
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+/* input text */
+.product-invoice-box input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/* nút lưu */
+.product-invoice-box button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #157347;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.product-invoice-box button:hover {
+    background: #12633a;
+}
+/* ===== MOBILE FIX ===== */
+@media (max-width: 768px) {
+
+    /* container full */
+    .content,
+    .main-content,
+    .staff-content {
+        padding: 12px !important;
+    }
+
+    /* card */
+    .card,
+    .order-card,
+    .detail-card {
+        padding: 14px !important;
+        border-radius: 16px !important;
+        margin-bottom: 12px;
+    }
+
+    /* tiêu đề */
+    h1, h2, h3 {
+        font-size: 18px !important;
+    }
+
+    /* text */
+    p, span {
+        font-size: 14px !important;
+    }
+
+    /* ảnh sản phẩm */
+    .product-image img,
+    .order-product img {
+        width: 100% !important;
+        max-height: 180px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: #f5f7fb;
+        padding: 6px;
+    }
+
+    /* block sản phẩm */
+    .product-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* input file */
+    input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        background: #fff;
+        font-size: 13px;
+    }
+
+    /* textarea */
+    textarea {
+        width: 100%;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    /* nút */
+    .btn,
+    button {
+        width: 100%;
+        height: 44px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* nút lưu */
+    .btn-save,
+    .btn-success {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        color: #fff;
+        border: none;
+        box-shadow: 0 6px 14px rgba(22, 163, 74, 0.2);
+    }
+
+    /* spacing */
+    .form-group {
+        margin-bottom: 10px;
+    }
+}
+.product-image {
+    display: flex;
+    justify-content: center;
+}
+
+.product-image img {
+    max-width: 220px;
+}
+@media (max-width: 768px) {
+
+    .product-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .product-image img {
+        width: 80px !important;
+        height: 80px !important;
+        border-radius: 10px;
+    }
+
+    .product-info {
+        flex: 1;
+        text-align: left;
+    }
+}
