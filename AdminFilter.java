@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.NguoiDung;
 
-//@WebFilter("/admin/*")
+@WebFilter("/admin/*")
 public class AdminFilter extends HttpFilter implements Filter {
 
     @Override
