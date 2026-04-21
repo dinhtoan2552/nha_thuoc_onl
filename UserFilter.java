@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.NguoiDung;
 
-@WebFilter("/user/*")
+//@WebFilter("/user/*")
 public class UserFilter extends HttpFilter implements Filter {
 
     @Override
