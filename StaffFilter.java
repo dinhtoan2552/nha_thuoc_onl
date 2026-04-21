@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.NguoiDung;
 
-//@WebFilter("/staff/*")
+@WebFilter("/staff/*")
 public class StaffFilter extends HttpFilter implements Filter {
 
     @Override
